@@ -1,0 +1,4 @@
+# Testing
+pytest>=8.0.0
+
+# Optional dependencies for enhanced functionality
