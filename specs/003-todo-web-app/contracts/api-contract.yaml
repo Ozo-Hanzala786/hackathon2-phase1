@@ -1,0 +1,254 @@
+# API Contract: Todo Web Application
+
+**Feature**: 003-todo-web-app | **Date**: 2026-01-21
+
+## Overview
+
+This document defines the API contracts for the Todo web application with multi-user support and JWT authentication.
+
+## Authentication
+
+All endpoints require JWT authentication using the Authorization header:
+```
+Authorization: Bearer <jwt_token>
+```
+
+## Base URL
+```
+http://localhost:8000/api/{user_id}/
+```
+
+## Endpoints
+
+### GET /api/{user_id}/tasks
+
+**Description**: Retrieve all tasks for the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+
+**Query Parameters**:
+- None
+
+**Response**:
+- Status: 200 OK
+- Body: Array of Task objects
+
+**Success Response Example**:
+```json
+[
+  {
+    "id": "1",
+    "title": "Complete project",
+    "description": "Finish the todo application project",
+    "completed": false,
+    "user_id": "user123",
+    "created_at": "2026-01-21T10:00:00Z",
+    "updated_at": "2026-01-21T10:00:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Review code",
+    "description": "Review the implementation for security issues",
+    "completed": true,
+    "user_id": "user123",
+    "created_at": "2026-01-21T09:00:00Z",
+    "updated_at": "2026-01-21T09:30:00Z"
+  }
+]
+```
+
+**Error Responses**:
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+- 404 Not Found: User doesn't exist
+
+---
+
+### POST /api/{user_id}/tasks
+
+**Description**: Create a new task for the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+
+**Request Body**:
+```json
+{
+  "title": "string (required, max 255)",
+  "description": "string (optional, max 1000)",
+  "completed": "boolean (optional, default false)"
+}
+```
+
+**Response**:
+- Status: 201 Created
+- Body: Created Task object
+
+**Success Response Example**:
+```json
+{
+  "id": "3",
+  "title": "New task",
+  "description": "A new task to be completed",
+  "completed": false,
+  "user_id": "user123",
+  "created_at": "2026-01-21T11:00:00Z",
+  "updated_at": "2026-01-21T11:00:00Z"
+}
+```
+
+**Error Responses**:
+- 400 Bad Request: Invalid input data
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+
+---
+
+### GET /api/{user_id}/tasks/{id}
+
+**Description**: Retrieve details for a specific task owned by the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+- id: Task identifier
+
+**Response**:
+- Status: 200 OK
+- Body: Task object
+
+**Success Response Example**:
+```json
+{
+  "id": "1",
+  "title": "Complete project",
+  "description": "Finish the todo application project",
+  "completed": false,
+  "user_id": "user123",
+  "created_at": "2026-01-21T10:00:00Z",
+  "updated_at": "2026-01-21T10:00:00Z"
+}
+```
+
+**Error Responses**:
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+- 404 Not Found: Task doesn't exist or doesn't belong to user
+
+---
+
+### PUT /api/{user_id}/tasks/{id}
+
+**Description**: Update an existing task owned by the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+- id: Task identifier
+
+**Request Body**:
+```json
+{
+  "title": "string (required, max 255)",
+  "description": "string (optional, max 1000)",
+  "completed": "boolean (optional)"
+}
+```
+
+**Response**:
+- Status: 200 OK
+- Body: Updated Task object
+
+**Success Response Example**:
+```json
+{
+  "id": "1",
+  "title": "Updated task title",
+  "description": "Updated task description",
+  "completed": true,
+  "user_id": "user123",
+  "created_at": "2026-01-21T10:00:00Z",
+  "updated_at": "2026-01-21T12:00:00Z"
+}
+```
+
+**Error Responses**:
+- 400 Bad Request: Invalid input data
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+- 404 Not Found: Task doesn't exist or doesn't belong to user
+
+---
+
+### DELETE /api/{user_id}/tasks/{id}
+
+**Description**: Delete a task owned by the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+- id: Task identifier
+
+**Response**:
+- Status: 204 No Content
+
+**Error Responses**:
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+- 404 Not Found: Task doesn't exist or doesn't belong to user
+
+---
+
+### PATCH /api/{user_id}/tasks/{id}/complete
+
+**Description**: Toggle the completed status of a task owned by the authenticated user
+
+**Headers**:
+- Authorization: Bearer <token>
+
+**Path Parameters**:
+- user_id: User's unique identifier from JWT token
+- id: Task identifier
+
+**Request Body**:
+```json
+{
+  "completed": "boolean (required)"
+}
+```
+
+**Response**:
+- Status: 200 OK
+- Body: Updated Task object
+
+**Success Response Example**:
+```json
+{
+  "id": "1",
+  "title": "Complete project",
+  "description": "Finish the todo application project",
+  "completed": true,
+  "user_id": "user123",
+  "created_at": "2026-01-21T10:00:00Z",
+  "updated_at": "2026-01-21T13:00:00Z"
+}
+```
+
+**Error Responses**:
+- 400 Bad Request: Invalid input data
+- 401 Unauthorized: Invalid or missing JWT token
+- 403 Forbidden: user_id in URL doesn't match user_id in JWT
+- 404 Not Found: Task doesn't exist or doesn't belong to user

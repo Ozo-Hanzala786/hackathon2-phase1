@@ -6,7 +6,10 @@
       "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/setup-plan.ps1\" -Json)",
       "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
       "Bash(python -m src.todo_app.cli.main --help)",
-      "Bash(python -m src.todo_app.cli.main add --title \"Test Task\" --description \"This is a test task for verification\")"
+      "Bash(python -m src.todo_app.cli.main add --title \"Test Task\" --description \"This is a test task for verification\")",
+      "Bash(git fetch --all --prune)",
+      "Bash(dir specs003-todo-web-app)",
+      "Bash(git rev-parse --git-dir)"
     ]
   }
 }
